@@ -12,6 +12,7 @@ from keras.datasets import cifar10
 from keras.utils import np_utils
 from model import create_model
 from keras.optimizers import SGD, Adam
+from keras.callbacks import LearningRateScheduler
 
 
 def main():
@@ -44,7 +45,16 @@ def main():
                          output_dim, dropout_rate)
     model.summary()
     # sgd = Adam()
-    sgd = SGD(lr=0.1, decay=1e-4, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=0.1, decay=0, momentum=0.9, nesterov=True)
+
+    def _lr_scheduler(epoch):
+        if epoch >= 225:
+            return 0.001
+        if epoch >= 150:
+            return 0.01
+        return 0.1
+
+    lr_scheduler = LearningRateScheduler(_lr_scheduler)
     model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
                   metrics=['accuracy'])
@@ -59,7 +69,8 @@ def main():
               batch_size=batch_size,
               nb_epoch=nb_epoch,
               validation_data=(X_test, Y_test),
-              shuffle=True)
+              shuffle=True,
+              callbacks=[lr_scheduler])
     model.save('./output_model')
 
 if __name__ == '__main__':
