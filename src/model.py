@@ -70,7 +70,7 @@ def create_model(input_shape, num_first_filter, num_growth, depth, output_dim,
                           W_regularizer=regularizer,
                           b_regularizer=regularizer)(img_input)
 
-    input_layers = [img_input, conv1]
+    input_layers = [conv1]
     num_filters = num_first_filter
 
     # 1st block
@@ -122,7 +122,8 @@ def test():
     num_growth = 12
     depth = 10
     output_dim = 10
-    model = create_model((3, 32, 32), num_first_filter, num_growth, depth, output_dim)
+    drop_rate = None
+    model = create_model((3, 32, 32), num_first_filter, num_growth, depth, output_dim, drop_rate)
     # model.compile(optimizer='sgd', loss='mse')  # dummy
     model.summary()
 
