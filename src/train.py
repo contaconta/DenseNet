@@ -48,11 +48,11 @@ def main():
     sgd = SGD(lr=0.1, decay=0, momentum=0.9, nesterov=True)
 
     def _lr_scheduler(epoch):
-        if epoch >= 225:
-            return 0.001
-        if epoch >= 150:
+        if epoch < 150:
+            return 0.1
+        if epoch < 225:
             return 0.01
-        return 0.1
+        return 0.001
 
     lr_scheduler = LearningRateScheduler(_lr_scheduler)
     model.compile(loss='categorical_crossentropy',
